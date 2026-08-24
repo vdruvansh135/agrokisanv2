@@ -1,15 +1,15 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Home, Users, ShieldCheck, Landmark, Mic } from "lucide-react";
+import { Home, Store, Users, Bell, Mic } from "lucide-react";
 import type { ReactNode } from "react";
 import { useApp } from "@/lib/app-store";
 import { KrishiAI } from "./KrishiAI";
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },
-  { to: "/labor", label: "Labor", icon: Users },
-  { to: "/risk", label: "Risk", icon: ShieldCheck },
-  { to: "/schemes", label: "Schemes", icon: Landmark },
+  { to: "/market", label: "Market", icon: Store },
+  { to: "/community", label: "Community", icon: Users },
+  { to: "/alerts", label: "Alerts", icon: Bell },
 ] as const;
 
 export function PhoneShell({ children }: { children: ReactNode }) {
@@ -38,18 +38,19 @@ export function PhoneShell({ children }: { children: ReactNode }) {
             <NavLink key={item.to} {...item} active={pathname === item.to} />
           ))}
         </nav>
+        
+        {/* Floating Krishi AI Center Button */}
         <button
           type="button"
           onClick={() => setAiOpen(true)}
           aria-label="Open Krishi AI assistant"
-          className="pointer-events-auto absolute bottom-14 left-1/2 grid h-16 w-16 -translate-x-1/2 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_10px_30px_-8px_var(--primary)]"
+          className="pointer-events-auto absolute bottom-14 left-1/2 grid h-16 w-16 -translate-x-1/2 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_10px_30px_-8px_var(--primary)] hover:scale-105 transition-transform"
         >
           <span className="absolute inset-0 animate-ping rounded-full bg-primary/40" />
           <span className="absolute -inset-2 animate-pulse rounded-full bg-primary/15" />
           <Mic className="relative h-7 w-7" />
         </button>
       </div>
-
 
       <KrishiAI />
     </div>
@@ -71,7 +72,7 @@ function NavLink({
     <Link
       to={to}
       className={`flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl py-1.5 text-[11px] font-semibold transition-colors ${
-        active ? "text-primary" : "text-muted-foreground"
+        active ? "text-primary" : "text-muted-foreground hover:text-foreground/70"
       }`}
     >
       <Icon className={`h-5 w-5 shrink-0 ${active ? "scale-110" : ""} transition-transform`} />

@@ -1,316 +1,203 @@
-import { AnimatePresence, motion } from "framer-motion";
-import { Sprout, Users, ShieldCheck, Landmark, ArrowRight, Phone, Check } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useApp, type Role } from "@/lib/app-store";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, MapPin, User, CheckCircle2 } from "lucide-react";
+import { useApp } from "@/lib/app-store";
 import { languages } from "@/lib/agro-data";
 
-const slides = [
-  { icon: Users, title: "Find Workers", body: "Hire trusted laborers near your village. Zero commission, always." },
-  { icon: ShieldCheck, title: "Protect Your Farm", body: "Track crop risk, groundwater and insurance claims in one place." },
-  { icon: Landmark, title: "Discover Schemes", body: "See only the government schemes that actually match your land." },
-];
-
 export function Onboarding() {
-  const { setOnboarded, profile, setProfile } = useApp();
-  const [step, setStep] = useState(0); // 0 splash, 1 carousel, 2 phone, 3 otp, 4 role, 5 profile
-  const [slide, setSlide] = useState(0);
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
-  const [name, setName] = useState("");
-  const [village, setVillage] = useState("");
+  const { profile, setProfile, setOnboarded } = useApp();
+  const [step, setStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  useEffect(() => {
-    if (step === 0) {
-      const t = window.setTimeout(() => setStep(1), 1900);
-      return () => window.clearTimeout(t);
-    }
-    return undefined;
-  }, [step]);
+  const handleComplete = () => {
+    setIsSubmitting(true);
+    // Pause for a nice success animation before entering the app
+    setTimeout(() => {
+      setOnboarded(true);
+    }, 1800);
+  };
+
+  // Dynamic progress bar calculation
+  const calculateProgress = () => {
+    let progress = 0;
+    if (profile.name) progress += 33;
+    if (profile.village) progress += 33;
+    if (profile.language) progress += 34;
+    return progress;
+  };
+
+  const progress = calculateProgress();
 
   return (
-    <div className="relative mx-auto min-h-screen max-w-md overflow-hidden bg-background">
+    // THE FIX: Added 'mx-auto max-w-md overflow-hidden shadow-2xl' to lock it to mobile width!
+    <div className="relative mx-auto min-h-screen max-w-md bg-background flex flex-col font-sans overflow-hidden shadow-2xl">
       <AnimatePresence mode="wait">
-        {step === 0 && (
+        
+        {/* STEP 1: CINEMATIC SPLASH SCREEN (Using raithu.jpg) */}
+        {step === 1 && (
           <motion.div
-            key="splash"
-            exit={{ opacity: 0, scale: 1.05 }}
-            className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-primary to-[oklch(0.45_0.12_155)] text-primary-foreground"
+            key="step1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} // Smooth exit transition
+            transition={{ duration: 0.8 }}
+            className="flex-1 flex flex-col items-center justify-end p-6 text-center relative bg-black"
           >
-            <motion.div
-              initial={{ scale: 0.6, opacity: 0 }}
+            {/* The Image with a subtle zoom-in effect */}
+            <motion.img
+              src="/raithu.png"
+              alt="Agro Kisan Farmer"
+              initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 14 }}
-              className="grid h-24 w-24 place-items-center rounded-[2rem] bg-primary-foreground/15 backdrop-blur"
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute inset-0 w-full h-full object-cover opacity-90 object-top"
+            />
+            
+            {/* Dark gradient overlay so the text pops */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+            <motion.div 
+               initial={{ y: 30, opacity: 0 }}
+               animate={{ y: 0, opacity: 1 }}
+               transition={{ delay: 0.5, duration: 0.8 }}
+               className="relative z-10 w-full flex flex-col items-center pb-8"
             >
-              <Sprout className="h-12 w-12" />
+              <h1 className="text-5xl font-black text-white mb-2 tracking-tight drop-shadow-2xl">Agro Kisan</h1>
+              <p className="text-lg text-white/80 font-medium mb-10 drop-shadow-md">
+                Your complete farming ecosystem.
+              </p>
+              <button
+                onClick={() => setStep(2)}
+                className="bg-primary text-primary-foreground flex items-center justify-center gap-2 w-full max-w-sm py-4 rounded-2xl font-bold text-lg shadow-[0_0_30px_rgba(var(--primary),0.4)] hover:bg-primary/90 transition-all active:scale-[0.98]"
+              >
+                Get Started <ArrowRight size={20} />
+              </button>
             </motion.div>
-            <motion.h1
-              initial={{ y: 16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              className="mt-6 text-4xl"
-            >
-              Agro Kisan
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.85 }}
-              transition={{ delay: 0.5 }}
-              className="mt-1 text-sm"
-            >
-              किसान का साथी • Farmer&apos;s companion
-            </motion.p>
           </motion.div>
         )}
 
-        {step === 1 && (
+        {/* STEP 2: PROFILE SETUP */}
+        {step === 2 && !isSubmitting && (
           <motion.div
-            key="carousel"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, x: -30 }}
-            className="flex min-h-screen flex-col justify-between p-6"
+            key="step2"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="flex-1 flex flex-col p-6 pt-12 w-full"
           >
-            <div className="pt-14">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={slide}
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -40 }}
-                  transition={{ type: "spring", stiffness: 240, damping: 26 }}
-                  className="text-center"
-                >
-                  {(() => {
-                    const Icon = slides[slide]!.icon;
-                    return (
-                      <span className="mx-auto grid h-28 w-28 place-items-center rounded-[2rem] bg-primary/12 text-primary">
-                        <Icon className="h-14 w-14" />
-                      </span>
-                    );
-                  })()}
-                  <h2 className="mt-8 text-3xl">{slides[slide]!.title}</h2>
-                  <p className="mx-auto mt-3 max-w-xs text-sm text-muted-foreground">{slides[slide]!.body}</p>
-                </motion.div>
-              </AnimatePresence>
+            <div className="mb-8">
+              <h1 className="text-3xl font-black text-foreground mb-2 tracking-tight">Set up your profile</h1>
+              <p className="text-muted-foreground font-medium">Almost done</p>
             </div>
-            <div>
-              <div className="mb-6 flex justify-center gap-2">
-                {slides.map((s, i) => (
-                  <span
-                    key={s.title}
-                    className={`h-2 rounded-full transition-all ${i === slide ? "w-6 bg-primary" : "w-2 bg-border"}`}
-                  />
-                ))}
+
+            <div className="mb-8">
+              <div className="flex justify-between items-end mb-2">
+                <span className="text-xs font-bold text-primary tracking-wider">Profile {progress}% Complete</span>
               </div>
-              <PrimaryButton
-                onClick={() => (slide < slides.length - 1 ? setSlide(slide + 1) : setStep(2))}
-                label={slide < slides.length - 1 ? "Next" : "Get Started"}
-              />
+              <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-primary rounded-full" 
+                  initial={{ width: 0 }} 
+                  animate={{ width: `${progress}%` }} 
+                  transition={{ type: "spring", damping: 20 }}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6 flex-1">
+              {/* Full Name Input */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Full Name</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <User size={18} className="text-muted-foreground" />
+                  </div>
+                  <input
+                    type="text"
+                    value={profile.name}
+                    onChange={(e) => setProfile({ name: e.target.value })}
+                    placeholder="Enter your name"
+                    className="w-full bg-card border border-border/50 rounded-2xl py-4 pl-12 pr-4 text-foreground placeholder:text-muted-foreground font-medium focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Village Input */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Village / District</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <MapPin size={18} className="text-muted-foreground" />
+                  </div>
+                  <input
+                    type="text"
+                    value={profile.village}
+                    onChange={(e) => setProfile({ village: e.target.value })}
+                    placeholder="e.g. Kotapalli"
+                    className="w-full bg-card border border-border/50 rounded-2xl py-4 pl-12 pr-4 text-foreground placeholder:text-muted-foreground font-medium focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all shadow-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Preferred Language */}
+              <div className="space-y-3">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Preferred Language</label>
+                <div className="flex flex-wrap gap-2">
+                  {languages.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => setProfile({ language: l.code })}
+                      className={`px-4 py-2.5 rounded-full text-sm font-bold transition-all duration-200 ${
+                        profile.language === l.code
+                          ? "bg-primary text-primary-foreground shadow-md scale-105"
+                          : "bg-card border border-border/50 text-muted-foreground hover:bg-muted"
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 pb-8">
               <button
-                onClick={() => setStep(2)}
-                className="mt-3 w-full py-2 text-sm font-medium text-muted-foreground"
+                disabled={progress < 100}
+                onClick={handleComplete}
+                className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-lg transition-all ${
+                  progress === 100 
+                  ? "bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 active:scale-[0.98]" 
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
+                }`}
               >
-                Skip
+                Enter Agro Kisan <ArrowRight size={20} />
               </button>
             </div>
           </motion.div>
         )}
 
-        {step === 2 && (
-          <StepShell key="phone" title="Enter your mobile number" subtitle="We will send a 6-digit OTP to verify">
-            <div className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3">
-              <Phone className="h-5 w-5 shrink-0 text-primary" />
-              <span className="text-sm font-semibold">+91</span>
-              <input
-                inputMode="numeric"
-                maxLength={10}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                placeholder="98765 43210"
-                className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-muted-foreground"
-              />
-            </div>
-            <PrimaryButton
-              disabled={phone.length !== 10}
-              onClick={() => {
-                setProfile({ phone: `+91 ${phone}` });
-                setStep(3);
-              }}
-              label="Send OTP"
-              className="mt-6"
-            />
-          </StepShell>
+        {/* STEP 3: SUCCESS ANIMATION */}
+        {isSubmitting && (
+          <motion.div
+            key="submitting"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="flex-1 flex flex-col items-center justify-center text-center p-6"
+          >
+            <motion.div 
+              initial={{ scale: 0 }} 
+              animate={{ scale: 1 }} 
+              transition={{ type: "spring", bounce: 0.5 }}
+              className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 mb-6 border border-green-500/20 shadow-sm"
+            >
+              <CheckCircle2 size={48} />
+            </motion.div>
+            <h2 className="text-3xl font-black text-foreground mb-2 tracking-tight">Profile Created!</h2>
+            <p className="text-muted-foreground font-medium">Preparing your digital farm...</p>
+          </motion.div>
         )}
 
-        {step === 3 && (
-          <StepShell key="otp" title="Verify OTP" subtitle={`Sent to ${profile.phone} • demo code 123456`}>
-            <div className="flex justify-between gap-2">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className={`grid h-14 flex-1 place-items-center rounded-xl border text-xl font-bold ${
-                    otp.length === i ? "border-primary bg-primary/5" : "border-border bg-card"
-                  }`}
-                >
-                  {otp[i] ?? ""}
-                </div>
-              ))}
-            </div>
-            <input
-              autoFocus
-              inputMode="numeric"
-              maxLength={6}
-              value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-              className="mt-4 w-full rounded-xl border border-border bg-card px-4 py-3 text-center tracking-[0.5em] outline-none"
-              placeholder="••••••"
-            />
-            <PrimaryButton
-              disabled={otp.length !== 6}
-              onClick={() => setStep(4)}
-              label="Verify & Continue"
-              className="mt-6"
-            />
-          </StepShell>
-        )}
-
-        {step === 4 && (
-          <StepShell key="role" title="How will you use Agro Kisan?" subtitle="You can change this later">
-            <div className="space-y-3">
-              {(
-                [
-                  { key: "farmer", label: "Farmer", desc: "I own or cultivate land and hire workers" },
-                  { key: "worker", label: "Worker", desc: "I look for daily farm work nearby" },
-                  { key: "both", label: "Both", desc: "I farm and also take up work" },
-                ] as { key: Role; label: string; desc: string }[]
-              ).map((r) => (
-                <motion.button
-                  key={r.key}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => setProfile({ role: r.key })}
-                  className={`flex w-full items-center gap-3 rounded-2xl border p-4 text-left ${
-                    profile.role === r.key ? "border-primary bg-primary/8" : "border-border bg-card"
-                  }`}
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-semibold">{r.label}</span>
-                    <span className="block text-xs text-muted-foreground">{r.desc}</span>
-                  </span>
-                  {profile.role === r.key && (
-                    <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground">
-                      <Check className="h-4 w-4" />
-                    </span>
-                  )}
-                </motion.button>
-              ))}
-            </div>
-            <PrimaryButton onClick={() => setStep(5)} label="Continue" className="mt-6" />
-          </StepShell>
-        )}
-
-        {step === 5 && (
-          <StepShell key="profile" title="Set up your profile" subtitle="Almost done">
-            <div className="mb-5">
-              <div className="mb-1 flex justify-between text-xs font-semibold text-muted-foreground">
-                <span>Profile {name && village ? 100 : 60}% Complete</span>
-              </div>
-              <div className="h-2 overflow-hidden rounded-full bg-muted">
-                <motion.div
-                  animate={{ width: name && village ? "100%" : "60%" }}
-                  className="h-full rounded-full bg-primary"
-                />
-              </div>
-            </div>
-            <label className="mb-1 block text-xs font-semibold text-muted-foreground">Full Name</label>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ramu Yadav"
-              className="mb-4 w-full rounded-2xl border border-border bg-card px-4 py-3 outline-none"
-            />
-            <label className="mb-1 block text-xs font-semibold text-muted-foreground">Village / District</label>
-            <input
-              value={village}
-              onChange={(e) => setVillage(e.target.value)}
-              placeholder="Kotapalli, Guntur"
-              className="mb-4 w-full rounded-2xl border border-border bg-card px-4 py-3 outline-none"
-            />
-            <label className="mb-2 block text-xs font-semibold text-muted-foreground">Preferred Language</label>
-            <div className="flex gap-2">
-              {languages.map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => setProfile({ language: l.code })}
-                  className={`flex-1 rounded-full py-2 text-sm font-semibold ${
-                    profile.language === l.code
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted text-muted-foreground"
-                  }`}
-                >
-                  {l.label}
-                </button>
-              ))}
-            </div>
-            <PrimaryButton
-              onClick={() => {
-                setProfile({ name: name || "Ramu", village: village || "Kotapalli, Guntur" });
-                setOnboarded(true);
-              }}
-              label="Enter Agro Kisan"
-              className="mt-8"
-            />
-          </StepShell>
-        )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function StepShell({
-  title,
-  subtitle,
-  children,
-}: {
-  title: string;
-  subtitle: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -40 }}
-      transition={{ type: "spring", stiffness: 240, damping: 26 }}
-      className="min-h-screen p-6 pt-16"
-    >
-      <h2 className="text-2xl">{title}</h2>
-      <p className="mb-8 mt-1 text-sm text-muted-foreground">{subtitle}</p>
-      {children}
-    </motion.div>
-  );
-}
-
-function PrimaryButton({
-  label,
-  onClick,
-  disabled,
-  className = "",
-}: {
-  label: string;
-  onClick: () => void;
-  disabled?: boolean;
-  className?: string;
-}) {
-  return (
-    <motion.button
-      whileTap={{ scale: disabled ? 1 : 0.96 }}
-      disabled={disabled}
-      onClick={onClick}
-      className={`flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 font-semibold text-primary-foreground disabled:opacity-40 ${className}`}
-    >
-      {label}
-      <ArrowRight className="h-4 w-4" />
-    </motion.button>
   );
 }

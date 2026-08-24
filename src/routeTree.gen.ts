@@ -10,13 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as CommunityRouteImport } from './routes/community'
 import { Route as LaborRouteImport } from './routes/labor'
 import { Route as LoansRouteImport } from './routes/loans'
 import { Route as MachineryRouteImport } from './routes/machinery'
+import { Route as MarketRouteImport } from './routes/market'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as SchemesRouteImport } from './routes/schemes'
+import { Route as SignoutRouteImport } from './routes/signout'
 import { Route as SoilRouteImport } from './routes/soil'
 import { Route as SubsidiesRouteImport } from './routes/subsidies'
 import { Route as SupportRouteImport } from './routes/support'
@@ -26,6 +30,16 @@ import { Route as WaterRouteImport } from './routes/water'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunityRoute = CommunityRouteImport.update({
+  id: '/community',
+  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LaborRoute = LaborRouteImport.update({
@@ -41,6 +55,11 @@ const LoansRoute = LoansRouteImport.update({
 const MachineryRoute = MachineryRouteImport.update({
   id: '/machinery',
   path: '/machinery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRoute = MarketRouteImport.update({
+  id: '/market',
+  path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -61,6 +80,11 @@ const RiskRoute = RiskRouteImport.update({
 const SchemesRoute = SchemesRouteImport.update({
   id: '/schemes',
   path: '/schemes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignoutRoute = SignoutRouteImport.update({
+  id: '/signout',
+  path: '/signout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SoilRoute = SoilRouteImport.update({
@@ -91,13 +115,17 @@ const WaterRoute = WaterRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/community': typeof CommunityRoute
   '/labor': typeof LaborRoute
   '/loans': typeof LoansRoute
   '/machinery': typeof MachineryRoute
+  '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/signout': typeof SignoutRoute
   '/soil': typeof SoilRoute
   '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
@@ -106,13 +134,17 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/community': typeof CommunityRoute
   '/labor': typeof LaborRoute
   '/loans': typeof LoansRoute
   '/machinery': typeof MachineryRoute
+  '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/signout': typeof SignoutRoute
   '/soil': typeof SoilRoute
   '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
@@ -122,13 +154,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/community': typeof CommunityRoute
   '/labor': typeof LaborRoute
   '/loans': typeof LoansRoute
   '/machinery': typeof MachineryRoute
+  '/market': typeof MarketRoute
   '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/signout': typeof SignoutRoute
   '/soil': typeof SoilRoute
   '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
@@ -139,13 +175,17 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/alerts'
+    | '/community'
     | '/labor'
     | '/loans'
     | '/machinery'
+    | '/market'
     | '/profile'
     | '/records'
     | '/risk'
     | '/schemes'
+    | '/signout'
     | '/soil'
     | '/subsidies'
     | '/support'
@@ -154,13 +194,17 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/alerts'
+    | '/community'
     | '/labor'
     | '/loans'
     | '/machinery'
+    | '/market'
     | '/profile'
     | '/records'
     | '/risk'
     | '/schemes'
+    | '/signout'
     | '/soil'
     | '/subsidies'
     | '/support'
@@ -169,13 +213,17 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/alerts'
+    | '/community'
     | '/labor'
     | '/loans'
     | '/machinery'
+    | '/market'
     | '/profile'
     | '/records'
     | '/risk'
     | '/schemes'
+    | '/signout'
     | '/soil'
     | '/subsidies'
     | '/support'
@@ -185,13 +233,17 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  CommunityRoute: typeof CommunityRoute
   LaborRoute: typeof LaborRoute
   LoansRoute: typeof LoansRoute
   MachineryRoute: typeof MachineryRoute
+  MarketRoute: typeof MarketRoute
   ProfileRoute: typeof ProfileRoute
   RecordsRoute: typeof RecordsRoute
   RiskRoute: typeof RiskRoute
   SchemesRoute: typeof SchemesRoute
+  SignoutRoute: typeof SignoutRoute
   SoilRoute: typeof SoilRoute
   SubsidiesRoute: typeof SubsidiesRoute
   SupportRoute: typeof SupportRoute
@@ -206,6 +258,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/community': {
+      id: '/community'
+      path: '/community'
+      fullPath: '/community'
+      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/labor': {
@@ -227,6 +293,13 @@ declare module '@tanstack/react-router' {
       path: '/machinery'
       fullPath: '/machinery'
       preLoaderRoute: typeof MachineryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -255,6 +328,13 @@ declare module '@tanstack/react-router' {
       path: '/schemes'
       fullPath: '/schemes'
       preLoaderRoute: typeof SchemesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signout': {
+      id: '/signout'
+      path: '/signout'
+      fullPath: '/signout'
+      preLoaderRoute: typeof SignoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/soil': {
@@ -297,13 +377,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
+  CommunityRoute: CommunityRoute,
   LaborRoute: LaborRoute,
   LoansRoute: LoansRoute,
   MachineryRoute: MachineryRoute,
+  MarketRoute: MarketRoute,
   ProfileRoute: ProfileRoute,
   RecordsRoute: RecordsRoute,
   RiskRoute: RiskRoute,
   SchemesRoute: SchemesRoute,
+  SignoutRoute: SignoutRoute,
   SoilRoute: SoilRoute,
   SubsidiesRoute: SubsidiesRoute,
   SupportRoute: SupportRoute,

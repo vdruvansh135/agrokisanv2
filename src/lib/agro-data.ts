@@ -275,11 +275,18 @@ export const officers = [
 ];
 
 export const languages = [
-  { code: "en", label: "English" },
-  { code: "hi", label: "हिंदी" },
-  { code: "te", label: "తెలుగు" },
+  { code: "EN", label: "English" },
+  { code: "HI", label: "हिन्दी" },
+  { code: "BN", label: "বাংলা" },
+  { code: "MR", label: "मराठी" },
+  { code: "TE", label: "తెలుగు" },
+  { code: "TA", label: "தமிழ்" },
+  { code: "GU", label: "ગુજરાતી" },
+  { code: "UR", label: "اردو" },
+  { code: "KN", label: "ಕನ್ನಡ" },
+  { code: "OR", label: "ଓଡ଼ିଆ" },
+  { code: "ML", label: "മലയാളം" }
 ];
-
 export function daysUntil(dateStr: string) {
   const diff = new Date(dateStr).getTime() - new Date("2026-08-21").getTime();
   return Math.max(0, Math.round(diff / 86400000));

@@ -1,124 +1,102 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { motion } from 'framer-motion'
-import { User, MapPin, Award, Sprout, Star, ThumbsUp } from 'lucide-react'
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { motion } from 'framer-motion';
+import { ChevronLeft, User, MapPin, Award, Phone, Sprout } from 'lucide-react';
+import { PhoneShell } from '@/components/agro/PhoneShell';
+import { useApp } from '@/lib/app-store';
 
 export const Route = createFileRoute('/profile')({
-  component: FarmerProfile,
-})
+  component: ProfileScreen,
+});
 
-// Mock JSON data
-const farmerData = {
-  name: "Ramesh Reddy",
-  location: "Kottapalli Village",
-  trustScore: 4.8,
-  landSize: "4.5 Acres",
-  experience: "15 Years",
-  endorsements: 24,
-  crops: [
-    { id: 1, name: "Paddy", season: "Kharif 2025", yield: "High" },
-    { id: 2, name: "Cotton", season: "Rabi 2025", yield: "Medium" },
-    { id: 3, name: "Maize", season: "Kharif 2026", yield: "Active" }
-  ]
-};
+// Added a farmer network as requested!
+const farmerNetwork = [
+  { id: 1, name: "Verayya", village: "Moinabad", acres: 4.5, crop: "Paddy", img: "/farmer1.png" },
+  { id: 2, name: "Ram Babu", village: "Chilkur", acres: 2.0, crop: "Cotton", img: "/farmer2.png" },
+  { id: 3, name: "Miya Bhai", village: "Chevella", acres: 6.2, crop: "Maize", img: "/farmer3.png" },
+];
 
-// Animation variants for smooth, staggered loading
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
-};
+function ProfileScreen() {
+  const { profile } = useApp();
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-};
-
-function FarmerProfile() {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-agro-dark p-4 md:p-8">
-      <motion.div 
-        className="max-w-4xl mx-auto"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        
-        {/* Profile Header Card */}
-        <motion.div variants={itemVariants} className="bg-white dark:bg-agro-surface rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-gray-800 mb-6 flex flex-col md:flex-row items-center gap-6">
-          <div className="w-24 h-24 bg-agro-sky dark:bg-gray-800 rounded-full flex items-center justify-center text-agro-green shadow-inner">
-            <User size={48} />
-          </div>
-          <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center md:justify-start gap-2">
-              {farmerData.name}
-              <Award className="text-agro-wheat" size={24} />
-            </h1>
-            <p className="text-agro-soil flex items-center justify-center md:justify-start gap-1 mt-1 font-medium">
-              <MapPin size={16} /> {farmerData.location}
-            </p>
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mt-4">
-              <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                <Star size={14} className="fill-current" /> {farmerData.trustScore} Trust Score
-              </span>
-              <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                <ThumbsUp size={14} /> {farmerData.endorsements} Endorsements
-              </span>
+    <PhoneShell>
+      <div className="min-h-screen bg-background font-sans pb-24">
+        {/* Header */}
+        <div className="bg-card/80 backdrop-blur-md border-b border-border/40 px-5 py-4 flex items-center gap-4 sticky top-0 z-50">
+          <Link to="/" className="p-2 -ml-2 rounded-full hover:bg-muted/50 transition-colors">
+            <ChevronLeft size={24} className="text-foreground" />
+          </Link>
+          <div className="flex items-center gap-2">
+            <div className="bg-primary/10 p-1.5 rounded-lg text-primary">
+              <User size={20} />
             </div>
+            <h1 className="text-lg font-bold text-foreground">Farmer Profile</h1>
           </div>
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 bg-agro-green text-white rounded-xl hover:bg-agro-leaf transition-colors font-bold shadow-md"
-          >
-            Connect
-          </motion.button>
-        </motion.div>
-
-        {/* Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <motion.div variants={itemVariants} className="bg-white dark:bg-agro-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
-            <div className="text-gray-500 dark:text-gray-400 text-sm mb-1">Total Land</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">{farmerData.landSize}</div>
-          </motion.div>
-          <motion.div variants={itemVariants} className="bg-white dark:bg-agro-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
-            <div className="text-gray-500 dark:text-gray-400 text-sm mb-1">Experience</div>
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">{farmerData.experience}</div>
-          </motion.div>
-          <motion.div variants={itemVariants} className="bg-white dark:bg-agro-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 text-center">
-            <div className="text-gray-500 dark:text-gray-400 text-sm mb-1">Status</div>
-            <div className="text-2xl font-bold text-agro-green">Verified</div>
-          </motion.div>
         </div>
 
-        {/* Crop History Timeline */}
-        <motion.div variants={itemVariants} className="bg-white dark:bg-agro-surface rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-            <Sprout className="text-agro-green" size={24} /> Crop History
-          </h2>
-          <div className="space-y-4">
-            {farmerData.crops.map((crop, index) => (
-              <motion.div 
-                key={crop.id}
-                whileHover={{ x: 5 }}
-                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors"
+        <div className="p-5">
+          {/* Main User Profile Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-card border border-border/40 rounded-3xl p-6 shadow-md mb-8 flex flex-col items-center text-center relative overflow-hidden"
+          >
+            <div className="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center text-3xl font-black mb-4 border-4 border-background shadow-sm z-10">
+              {profile.name.charAt(0)}
+            </div>
+            <h2 className="text-2xl font-black text-foreground z-10">{profile.name}</h2>
+            <p className="text-sm font-medium text-muted-foreground flex items-center gap-1 mt-1 z-10">
+              <MapPin size={14} /> {profile.village}
+            </p>
+            
+            <div className="flex gap-4 mt-6 w-full z-10">
+              <div className="flex-1 bg-surface p-3 rounded-2xl border border-border/50">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase">Land</p>
+                <p className="text-lg font-black text-foreground mt-0.5">{profile.acres} Acres</p>
+              </div>
+              <div className="flex-1 bg-surface p-3 rounded-2xl border border-border/50">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase">Main Crop</p>
+                <p className="text-lg font-black text-foreground mt-0.5">{profile.crop || "Mixed"}</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Your Farmer Network</h3>
+          
+          {/* The Network List */}
+          <div className="space-y-3">
+            {farmerNetwork.map((farmer, i) => (
+              <motion.div
+                key={farmer.id}
+                initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
+                className="bg-card border border-border/40 rounded-2xl p-4 shadow-sm flex items-center gap-4 transition-all hover:shadow-md"
               >
-                <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white">{crop.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{crop.season}</p>
+                {/* INSERT IMAGE URLS HERE */}
+                <div className="w-14 h-14 shrink-0 rounded-full bg-muted overflow-hidden border-2 border-primary/20 flex items-center justify-center relative">
+                  {farmer.img ? (
+                    <img src={farmer.img} alt={farmer.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-lg font-bold text-muted-foreground">{farmer.name.charAt(0)}</span>
+                  )}
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  crop.yield === 'Active' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-                }`}>
-                  {crop.yield} Yield
-                </span>
+                
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-bold text-foreground text-base truncate">{farmer.name}</h4>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                    <MapPin size={10} /> {farmer.village}
+                  </p>
+                  <p className="text-[10px] font-semibold text-primary flex items-center gap-1 mt-1 bg-primary/10 w-fit px-2 py-0.5 rounded-full">
+                    <Sprout size={10} /> {farmer.acres} Acres • {farmer.crop}
+                  </p>
+                </div>
+
+                <button className="w-10 h-10 rounded-full bg-secondary/20 text-secondary-foreground flex items-center justify-center hover:bg-secondary/40 transition-colors shrink-0">
+                  <Phone size={16} />
+                </button>
               </motion.div>
             ))}
           </div>
-        </motion.div>
-
-      </motion.div>
-    </div>
-  )
+        </div>
+      </div>
+    </PhoneShell>
+  );
 }
