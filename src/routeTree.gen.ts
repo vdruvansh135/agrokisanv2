@@ -11,11 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LaborRouteImport } from './routes/labor'
+import { Route as LoansRouteImport } from './routes/loans'
+import { Route as MachineryRouteImport } from './routes/machinery'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as RiskRouteImport } from './routes/risk'
 import { Route as SchemesRouteImport } from './routes/schemes'
+import { Route as SoilRouteImport } from './routes/soil'
+import { Route as SubsidiesRouteImport } from './routes/subsidies'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as WalletRouteImport } from './routes/wallet'
+import { Route as WaterRouteImport } from './routes/water'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -25,6 +31,21 @@ const IndexRoute = IndexRouteImport.update({
 const LaborRoute = LaborRouteImport.update({
   id: '/labor',
   path: '/labor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoansRoute = LoansRouteImport.update({
+  id: '/loans',
+  path: '/loans',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MachineryRoute = MachineryRouteImport.update({
+  id: '/machinery',
+  path: '/machinery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecordsRoute = RecordsRouteImport.update({
@@ -42,6 +63,16 @@ const SchemesRoute = SchemesRouteImport.update({
   path: '/schemes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SoilRoute = SoilRouteImport.update({
+  id: '/soil',
+  path: '/soil',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SubsidiesRoute = SubsidiesRouteImport.update({
+  id: '/subsidies',
+  path: '/subsidies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -52,61 +83,120 @@ const WalletRoute = WalletRouteImport.update({
   path: '/wallet',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WaterRoute = WaterRouteImport.update({
+  id: '/water',
+  path: '/water',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/labor': typeof LaborRoute
+  '/loans': typeof LoansRoute
+  '/machinery': typeof MachineryRoute
+  '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/soil': typeof SoilRoute
+  '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
   '/wallet': typeof WalletRoute
+  '/water': typeof WaterRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/labor': typeof LaborRoute
+  '/loans': typeof LoansRoute
+  '/machinery': typeof MachineryRoute
+  '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/soil': typeof SoilRoute
+  '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
   '/wallet': typeof WalletRoute
+  '/water': typeof WaterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/labor': typeof LaborRoute
+  '/loans': typeof LoansRoute
+  '/machinery': typeof MachineryRoute
+  '/profile': typeof ProfileRoute
   '/records': typeof RecordsRoute
   '/risk': typeof RiskRoute
   '/schemes': typeof SchemesRoute
+  '/soil': typeof SoilRoute
+  '/subsidies': typeof SubsidiesRoute
   '/support': typeof SupportRoute
   '/wallet': typeof WalletRoute
+  '/water': typeof WaterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/labor' | '/records' | '/risk' | '/schemes' | '/support' | '/wallet'
+    | '/'
+    | '/labor'
+    | '/loans'
+    | '/machinery'
+    | '/profile'
+    | '/records'
+    | '/risk'
+    | '/schemes'
+    | '/soil'
+    | '/subsidies'
+    | '/support'
+    | '/wallet'
+    | '/water'
   fileRoutesByTo: FileRoutesByTo
   to:
-    '/' | '/labor' | '/records' | '/risk' | '/schemes' | '/support' | '/wallet'
+    | '/'
+    | '/labor'
+    | '/loans'
+    | '/machinery'
+    | '/profile'
+    | '/records'
+    | '/risk'
+    | '/schemes'
+    | '/soil'
+    | '/subsidies'
+    | '/support'
+    | '/wallet'
+    | '/water'
   id:
     | '__root__'
     | '/'
     | '/labor'
+    | '/loans'
+    | '/machinery'
+    | '/profile'
     | '/records'
     | '/risk'
     | '/schemes'
+    | '/soil'
+    | '/subsidies'
     | '/support'
     | '/wallet'
+    | '/water'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LaborRoute: typeof LaborRoute
+  LoansRoute: typeof LoansRoute
+  MachineryRoute: typeof MachineryRoute
+  ProfileRoute: typeof ProfileRoute
   RecordsRoute: typeof RecordsRoute
   RiskRoute: typeof RiskRoute
   SchemesRoute: typeof SchemesRoute
+  SoilRoute: typeof SoilRoute
+  SubsidiesRoute: typeof SubsidiesRoute
   SupportRoute: typeof SupportRoute
   WalletRoute: typeof WalletRoute
+  WaterRoute: typeof WaterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -123,6 +213,27 @@ declare module '@tanstack/react-router' {
       path: '/labor'
       fullPath: '/labor'
       preLoaderRoute: typeof LaborRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/loans': {
+      id: '/loans'
+      path: '/loans'
+      fullPath: '/loans'
+      preLoaderRoute: typeof LoansRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/machinery': {
+      id: '/machinery'
+      path: '/machinery'
+      fullPath: '/machinery'
+      preLoaderRoute: typeof MachineryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/records': {
@@ -146,6 +257,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SchemesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/soil': {
+      id: '/soil'
+      path: '/soil'
+      fullPath: '/soil'
+      preLoaderRoute: typeof SoilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/subsidies': {
+      id: '/subsidies'
+      path: '/subsidies'
+      fullPath: '/subsidies'
+      preLoaderRoute: typeof SubsidiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -160,17 +285,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WalletRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/water': {
+      id: '/water'
+      path: '/water'
+      fullPath: '/water'
+      preLoaderRoute: typeof WaterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LaborRoute: LaborRoute,
+  LoansRoute: LoansRoute,
+  MachineryRoute: MachineryRoute,
+  ProfileRoute: ProfileRoute,
   RecordsRoute: RecordsRoute,
   RiskRoute: RiskRoute,
   SchemesRoute: SchemesRoute,
+  SoilRoute: SoilRoute,
+  SubsidiesRoute: SubsidiesRoute,
   SupportRoute: SupportRoute,
   WalletRoute: WalletRoute,
+  WaterRoute: WaterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

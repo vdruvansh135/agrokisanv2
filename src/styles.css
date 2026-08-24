@@ -1,3 +1,16 @@
+@theme {
+  --color-agro-green: #2E7D32;
+  --color-agro-leaf: #4CAF50;
+  --color-agro-soil: #5D4037;
+  --color-agro-wheat: #FBC02D;
+  --color-agro-sky: #E1F5FE;
+  --color-agro-dark: #121212;
+  --color-agro-surface: #1E1E1E;
+}
+
+
+
+
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -155,4 +168,21 @@
     font-weight: 700;
     letter-spacing: -0.01em;
   }
+}
+@layer base {
+  body {
+    @apply transition-colors duration-300 ease-in-out;
+  }
+  
+  .dark-theme {
+    @apply bg-agro-dark text-white;
+  }
+}
+
+/* Custom scrollbar for a polished look */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-agro-green rounded-full;
 }

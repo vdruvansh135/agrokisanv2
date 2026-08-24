@@ -16,6 +16,8 @@ import {
   LogOut,
   User,
   Languages,
+  Tractor,
+  FlaskConical
 } from "lucide-react";
 import { useState } from "react";
 import { PhoneShell } from "@/components/agro/PhoneShell";
@@ -75,7 +77,12 @@ const translations = {
       labor: { label: "Find Labor", note: "128 nearby" },
       risk: { label: "Risk & Insurance", note: "1 claim open" },
       schemes: { label: "Govt Schemes", note: "matches" },
-      records: { label: "Farm Records", note: "Kharif 2026" }
+      records: { label: "Farm Records", note: "Kharif 2026" },
+      machinery: { label: "Machinery", note: "Rent equipment" },
+      water: { label: "Water Share", note: "Peer-to-peer" },
+      soil: { label: "Soil Test", note: "Local agents" },
+      loans: { label: "Loan Check", note: "Eligibility status" },
+      profile: { label: "Farmer Profile", note: "Your network & history" }
     }
   },
   HI: {
@@ -98,7 +105,12 @@ const translations = {
       labor: { label: "मजदूर खोजें", note: "128 पास में" },
       risk: { label: "जोखिम और बीमा", note: "1 दावा खुला" },
       schemes: { label: "सरकारी योजनाएं", note: "मिलान" },
-      records: { label: "खेत के रिकॉर्ड", note: "खरीफ 2026" }
+      records: { label: "खेत के रिकॉर्ड", note: "खरीफ 2026" },
+      machinery: { label: "मशीनरी", note: "उपकरण किराए पर लें" },
+      water: { label: "जल साझाकरण", note: "पीयर-टू-पीयर" },
+      soil: { label: "मिट्टी परीक्षण", note: "स्थानीय एजेंट" },
+      loans: { label: "ऋण जांच", note: "पात्रता स्थिति" },
+      profile: { label: "किसान प्रोफ़ाइल", note: "आपका नेटवर्क" }
     }
   },
   TE: {
@@ -121,7 +133,12 @@ const translations = {
       labor: { label: "కార్మికులను కనుగొనండి", note: "128 సమీపంలో" },
       risk: { label: "ప్రమాదం & భీమా", note: "1 క్లెయిమ్ తెరిచి ఉంది" },
       schemes: { label: "ప్రభుత్వ పథకాలు", note: "సరిపోలికలు" },
-      records: { label: "పొలం రికార్డులు", note: "ఖరీఫ్ 2026" }
+      records: { label: "పొలం రికార్డులు", note: "ఖరీఫ్ 2026" },
+      machinery: { label: "యంత్రాలు", note: "అద్దె పరికరాలు" },
+      water: { label: "నీటి భాగస్వామ్యం", note: "పీర్-టు-పీర్" },
+      soil: { label: "మట్టి పరీక్ష", note: "స్థానిక ఏజెంట్లు" },
+      loans: { label: "లోన్ చెక్", note: "అర్హత స్థితి" },
+      profile: { label: "రైతు ప్రొఫైల్", note: "మీ నెట్‌వర్క్" }
     }
   }
 };
@@ -129,16 +146,20 @@ const translations = {
 function Dashboard() {
   const { profile } = useApp();
   
-  // Safely force uppercase so it always matches the dictionary
   const safeLang = (profile?.language || "EN").toUpperCase() as "EN" | "HI" | "TE";
   const t = translations[safeLang] || translations.EN;
 
-  // Dynamic quick actions array based on current language
+  // Dynamic quick actions array upgraded with the 5 new dashboards
   const quickActions = [
     { to: "/labor", label: t.actions.labor.label, icon: Users, note: t.actions.labor.note },
     { to: "/risk", label: t.actions.risk.label, icon: ShieldCheck, note: t.actions.risk.note },
     { to: "/schemes", label: t.actions.schemes.label, icon: Landmark, note: `${schemes.length} ${t.actions.schemes.note}` },
     { to: "/records", label: t.actions.records.label, icon: NotebookPen, note: t.actions.records.note },
+    { to: "/machinery", label: t.actions.machinery.label, icon: Tractor, note: t.actions.machinery.note },
+    { to: "/water", label: t.actions.water.label, icon: Droplets, note: t.actions.water.note },
+    { to: "/soil", label: t.actions.soil.label, icon: FlaskConical, note: t.actions.soil.note },
+    { to: "/loans", label: t.actions.loans.label, icon: ShieldCheck, note: t.actions.loans.note },
+    { to: "/profile", label: t.actions.profile.label, icon: User, note: t.actions.profile.note, gridSpan: "col-span-2" }
   ] as const;
 
   return (
@@ -174,8 +195,9 @@ function Dashboard() {
               key={a.to}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.07, type: "spring", stiffness: 220, damping: 22 }}
+              transition={{ delay: i * 0.05, type: "spring", stiffness: 220, damping: 22 }}
               whileTap={{ scale: 0.95 }}
+              className={(a as any).gridSpan || ""}
             >
               <Link
                 to={a.to}
