@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import logging
 from database import get_database
 # Import routers from the routers package
-from routers import labours, insurances, schemes, ai
+from routers import labours, insurances, schemes, ai, farmers, subsidies, water, machinery, soil_test
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +30,11 @@ app.include_router(labours.router)
 app.include_router(insurances.router)
 app.include_router(schemes.router)
 app.include_router(ai.router)
+app.include_router(farmers.router)
+app.include_router(subsidies.router)
+app.include_router(water.router)
+app.include_router(machinery.router)
+app.include_router(soil_test.router)
 
 @app.get("/", tags=["Root"])
 def read_root():
